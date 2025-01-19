@@ -1,2 +1,3 @@
 # IJCNN2025-STTP
-welcome!
+This is the pytorch implementation of STTP.
+![image](figs/fig1.png)
