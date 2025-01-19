@@ -1,5 +1,5 @@
 # STTP
-This is the pytorch implementation of STTP.
+This is the pytorch implementation of STTP. 
 
 ![image](figs/fig1.png)
 
@@ -8,7 +8,7 @@ This is the pytorch implementation of STTP.
 ## Datasets
 
 ## Train Commands
-To run STTP, you may directly execute the Python file in the terminal.Here are some examples:
+To run STTP, you may directly execute the Python file in the terminal. Here are some examples: 
 ```
 nohup python -u train.py --data PEMS08 --channels 256 > PEMS08.log &
 ```
