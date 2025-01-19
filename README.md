@@ -8,7 +8,10 @@ This is the pytorch implementation of STTP.
 ## Datasets
 
 ## Train Commands
-To run STOP on LargeST, for example, you may enter the folder LargeST and directly execute the Python file in the terminal:
+To run STTP, you may directly execute the Python file in the terminal.Here are some examples:
+```
+aaaaa
+```
 
 ## Results
 ![image](figs/fig2.png)
