@@ -145,7 +145,7 @@ def main():
 
     elif args.data == "bike_pick":  # 15
         args.num_nodes = 250
-        num_regions = 25
+        num_regions = 15
 
     elif args.data == "taxi_drop":  # 27
         args.num_nodes = 266
