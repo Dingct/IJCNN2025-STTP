@@ -4,7 +4,7 @@ This is the pytorch implementation of STTP.
 ![image](figs/fig1.png)
 
 ## Requirements
-The code is built based on Python 3.9.12, PyTorch 1.11.0, and NumPy 1.21.2.
+The code is built based on Python 3.9.0, PyTorch 1.11.0, and NumPy 1.24.4.
 ## Datasets
 
 ## Train Commands
