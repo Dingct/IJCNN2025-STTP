@@ -7,43 +7,43 @@ from datetime import datetime, timedelta
 
 def standard_transform(data: np.array, output_dir: str, train_index: list, history_seq_len: int, future_seq_len: int, norm_each_channel: int = False) -> np.array:
     """
-    标准化数据。
+    Standardized data.
 
-    参数:
-        data (np.array): 原始时间序列数据。
-        output_dir (str): 输出目录路径。
-        train_index (list): 训练数据的索引。
-        history_seq_len (int): 历史序列长度。
-        future_seq_len (int): 未来序列长度。
-        norm_each_channel (bool): 是否对每个通道进行单独归一化。
+    parameter:
+        data (np.array): Raw time series data.
+        output_dir (str): Output directory path.
+        train_index (list): An index of the training data.
+        history_seq_len (int): Historical sequence length.
+        future_seq_len (int): Future sequence length.
+        norm_each_channel (bool): Whether to perform separate normalization for each channel.
 
-    返回:
-        np.array: 归一化后的时间序列数据。
+    return:
+        np.array: Normalized time series data.
     """
-    if_rescale = not norm_each_channel  # 是否在重缩放数据上进行评估
+    if_rescale = not norm_each_channel  # Whether to evaluate on rescaled data
 
-    # 获取训练数据
+    # Getting training data
     data_train = data[:train_index[-1][1], ...]
 
     mean, std = data_train[..., 0].mean(), data_train[..., 0].std()
 
-    print("训练数据的均值:", mean)
-    print("训练数据的标准差:", std)
+    print("The mean of the training data:", mean)
+    print("Standard deviation of the training data:", std)
 
-    # 保存归一化参数
+    # Save the normalization parameters
     scaler = {}
     scaler["func"] = re_standard_transform.__name__
     scaler["args"] = {"mean": mean, "std": std}
     
-    # 保存归一化参数到文件
+    # Save the normalization parameters to a file
     with open(output_dir + "/scaler_in_{0}_out_{1}.pkl".format(history_seq_len, future_seq_len, if_rescale), "wb") as f:
         pickle.dump(scaler, f)
 
-    # 定义归一化函数
+    # Define the normalization function
     def normalize(x):
         return (x - mean) / std
 
-    # 归一化数据
+    # Normalize the data
     data_norm = normalize(data)
     return data_norm
 
@@ -69,13 +69,13 @@ def re_standard_transform(data: torch.Tensor, **kwargs) -> torch.Tensor:
 
 def generate_data(args: argparse.Namespace):
     """
-    预处理并生成训练/验证/测试数据集。
+    Preprocess and generate train/validation/test datasets.
 
-    参数:
-        args (argparse.Namespace): 预处理的配置参数
+    parameter:
+        args (argparse.Namespace): Configuration parameters for preprocessing
     """
 
-    # 提取参数配置
+    # Extract parameter configuration
     target_channel = args.target_channel
     future_seq_len = args.future_seq_len
     history_seq_len = args.history_seq_len
@@ -89,21 +89,21 @@ def generate_data(args: argparse.Namespace):
     norm_each_channel = args.norm_each_channel
     if_rescale = not norm_each_channel
 
-    # 读取数据
+    # read data
     data = np.load(data_file_path)['data'][...,0] # 2维npz / 3维npz
     # data = np.transpose(data, (1, 0))
     data = np.expand_dims(data, axis=-1) 
-    print("原始时间序列形状: {0}".format(data.shape))
+    print("Raw time series shape: {0}".format(data.shape))
 
-    # 划分数据集
+    # Splitting the dataset
     l, n, f= data.shape
     num_samples = l - (history_seq_len + future_seq_len) + 1
     train_num = round(num_samples * train_ratio)
     valid_num = round(num_samples * valid_ratio)
     test_num = num_samples - train_num - valid_num
-    print("训练样本数量: {0}".format(train_num))
-    print("验证样本数量: {0}".format(valid_num))
-    print("测试样本数量: {0}".format(test_num))
+    print("Number of training samples: {0}".format(train_num))
+    print("Number of validation samples: {0}".format(valid_num))
+    print("Number of test samples: {0}".format(test_num))
 
     # 生成索引列表
     index_list = []
