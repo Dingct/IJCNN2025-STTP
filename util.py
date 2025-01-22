@@ -59,18 +59,18 @@ def load_data_with_dataloader(dataset_dir, batch_size, input_len, output_len, va
     with open(os.path.join(dataset_dir, "scaler_in_{0}_out_{1}.pkl").format(input_len, output_len), "rb") as f:
         scaler_ = pickle.load(f)
 
-    # 获取平均值和标准差
+    # Get the mean and standard deviation
     mean, std = scaler_["args"]["mean"], scaler_["args"]["std"]
     scaler = StandardScaler(mean=mean, std=std)
 
     data_processed = data_file["processed_data"]
     
-    # 实例化数据集
+    # Instantiate the dataset
     train_dataset = TrafficFlowDataset(data_processed, index, 'train')
     valid_dataset = TrafficFlowDataset(data_processed, index, 'valid')
     test_dataset = TrafficFlowDataset(data_processed, index, 'test')
     
-    # 创建 DataLoader
+    # create DataLoader
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True,num_workers=4)
     valid_loader = DataLoader(valid_dataset, batch_size=valid_batch_size or batch_size, shuffle=False,num_workers=4)
     test_loader = DataLoader(test_dataset, batch_size=test_batch_size or batch_size, shuffle=False,num_workers=4)
@@ -228,8 +228,8 @@ class InfoNCELoss(nn.Module):
 
     def forward(self, z_t, z_s):
         batch_size = z_t.size(0)
-        z_t = F.normalize(z_t.reshape(batch_size, -1), dim=1)  # 展平并归一化
-        z_s = F.normalize(z_s.reshape(batch_size, -1), dim=1)  # 展平并归一化
+        z_t = F.normalize(z_t.reshape(batch_size, -1), dim=1)  # Flattening and normalizing
+        z_s = F.normalize(z_s.reshape(batch_size, -1), dim=1)  #
         similarity_matrix = torch.matmul(z_s, z_t.T) / self.temperature
         labels = torch.arange(batch_size).long().to(z_t.device)
         loss = F.cross_entropy(similarity_matrix, labels)
