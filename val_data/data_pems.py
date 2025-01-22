@@ -90,7 +90,7 @@ def generate_data(args: argparse.Namespace):
     if_rescale = not norm_each_channel
 
     # read data
-    data = np.load(data_file_path)['data'][...,0] # 2维npz / 3维npz
+    data = np.load(data_file_path)['data'][...,0] # 2 dimensional npz / 3 dimensional npz
     # data = np.transpose(data, (1, 0))
     data = np.expand_dims(data, axis=-1) 
     print("Raw time series shape: {0}".format(data.shape))
@@ -105,7 +105,7 @@ def generate_data(args: argparse.Namespace):
     print("Number of validation samples: {0}".format(valid_num))
     print("Number of test samples: {0}".format(test_num))
 
-    # 生成索引列表
+    # Generating index lists
     index_list = []
     for t in range(history_seq_len, num_samples + history_seq_len):
         index = (t - history_seq_len, t, t + future_seq_len)
@@ -117,13 +117,13 @@ def generate_data(args: argparse.Namespace):
                             valid_num: train_num + valid_num + test_num]
 
     print(len(train_index))
-    # 归一化数据
+    # Normalize the data
     scaler = standard_transform
     data_norm = scaler(data, output_dir, train_index, history_seq_len, future_seq_len, norm_each_channel=norm_each_channel)
     feature_list = [data_norm]
     print("data_shape",data_norm.shape)
 
-    # 添加时间特征
+    # Adding a time feature
     start_date = datetime(2016, 7, 1)  # PEMS08
     # start_date = datetime(2016, 4, 1)  # bike_drop、bike_pick、taxi_drop、taxi_pick
     # start_date = datetime(2017, 5, 1)  # PEMS07M
@@ -131,7 +131,7 @@ def generate_data(args: argparse.Namespace):
     # start_date = datetime(2021, 1, 1)  # CHI_TAXI
     time_features = []
     for i in range(data_norm.shape[0]):
-        current_date = start_date + timedelta(minutes=i * 1440 / args.steps_per_day)  # 根据采样频率5分钟来计算每个时间步对应的时间
+        current_date = start_date + timedelta(minutes=i * 1440 / args.steps_per_day)  # The time corresponding to each time step is calculated according to the sampling frequency of 5 minutes
         month_feature = current_date.month / 12 - 0.5
         day_feature = current_date.day / 31 - 0.5
         weekday_feature = current_date.weekday() / 6 - 0.5
@@ -145,7 +145,7 @@ def generate_data(args: argparse.Namespace):
     processed_data = np.concatenate(feature_list, axis=-1)
     print("processed_data_shape",processed_data.shape)
     
-    # 保存数据和索引
+    # Save the data and indexes
     index = {"train": train_index, "valid": valid_index, "test": test_index}
     with open(f"{output_dir}/index_in_{history_seq_len}_out_{future_seq_len}.pkl", "wb") as f:
         pickle.dump(index, f)
@@ -156,7 +156,7 @@ def generate_data(args: argparse.Namespace):
 
 
 if __name__ == "__main__":
-    # 窗口大小用于生成历史序列和目标序列
+    # The window size is used to generate historical and target sequences
     data_list = ['CAir_PM']
 
     for data in data_list:
@@ -178,26 +178,26 @@ if __name__ == "__main__":
         DATA_FILE_PATH = f"{DATASET_NAME}.npz"
 
         parser = argparse.ArgumentParser()
-        parser.add_argument("--output_dir", type=str, default=OUTPUT_DIR, help="输出目录。")
-        parser.add_argument("--data_file_path", type=str, default=DATA_FILE_PATH, help="原始交通数据路径。")
-        parser.add_argument("--history_seq_len", type=int, default=HISTORY_SEQ_LEN, help="序列长度。")
-        parser.add_argument("--future_seq_len", type=int, default=FUTURE_SEQ_LEN, help="序列长度。")
-        parser.add_argument("--steps_per_day", type=int, default=STEPS_PER_DAY, help="每日步数。")
-        parser.add_argument("--tod", type=bool, default=TOD, help="添加时间特征。")
-        parser.add_argument("--dow", type=bool, default=DOW, help="添加星期特征。")
-        parser.add_argument("--target_channel", type=list, default=TARGET_CHANNEL, help="选定的通道。")
-        parser.add_argument("--train_ratio", type=float, default=TRAIN_RATIO, help="训练比例")
-        parser.add_argument("--valid_ratio", type=float, default=VALID_RATIO, help="验证比例。")
-        parser.add_argument("--norm_each_channel", type=float, help="归一化每个通道。")
+        parser.add_argument("--output_dir", type=str, default=OUTPUT_DIR, help="output directory.")
+        parser.add_argument("--data_file_path", type=str, default=DATA_FILE_PATH, help="The original traffic data path.")
+        parser.add_argument("--history_seq_len", type=int, default=HISTORY_SEQ_LEN, help="sequence length.")
+        parser.add_argument("--future_seq_len", type=int, default=FUTURE_SEQ_LEN, help="sequence length.")
+        parser.add_argument("--steps_per_day", type=int, default=STEPS_PER_DAY, help="Daily steps.")
+        parser.add_argument("--tod", type=bool, default=TOD, help="Adding a time feature.")
+        parser.add_argument("--dow", type=bool, default=DOW, help="Adding a week feature.")
+        parser.add_argument("--target_channel", type=list, default=TARGET_CHANNEL, help="Selected channel.")
+        parser.add_argument("--train_ratio", type=float, default=TRAIN_RATIO, help="Training ratio.")
+        parser.add_argument("--valid_ratio", type=float, default=VALID_RATIO, help="Validation ratio.")
+        parser.add_argument("--norm_each_channel", type=float, help="Normalize each channel.")
         args = parser.parse_args()
 
-        # 打印参数
+        # Print parameters
         print("-" * (20 + 45 + 5))
         for key, value in sorted(vars(args).items()):
             print("|{0:>20} = {1:<45}|".format(key, str(value)))
         print("-" * (20 + 45 + 5))
 
-        # 创建输出目录
+        # Creating an output directory
         if not os.path.exists(args.output_dir):
             os.makedirs(args.output_dir)
         args.norm_each_channel = False
