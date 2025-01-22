@@ -79,13 +79,10 @@ def generate_data(args: argparse.Namespace):
     target_channel = args.target_channel
     future_seq_len = args.future_seq_len
     history_seq_len = args.history_seq_len
-    add_time_of_day = args.tod
-    add_day_of_week = args.dow
     output_dir = args.output_dir
     train_ratio = args.train_ratio
     valid_ratio = args.valid_ratio
     data_file_path = args.data_file_path
-    steps_per_day = args.steps_per_day
     norm_each_channel = args.norm_each_channel
     if_rescale = not norm_each_channel
 
@@ -166,12 +163,8 @@ if __name__ == "__main__":
         TRAIN_RATIO = 0.6
         VALID_RATIO = 0.2
         TARGET_CHANNEL = [0]
-        STEPS_PER_DAY = 288 # PEMS08 PEMS07M CAD3
-        # STEPS_PER_DAY = 48 # CHI_TAXI bike_drop bike_pick taxi_drop taxi_pick
 
         DATASET_NAME = data
-        TOD = True
-        DOW = True
 
         OUTPUT_DIR = f"{DATASET_NAME}"
         DATA_FILE_PATH = f"{DATASET_NAME}.npz"
@@ -181,9 +174,6 @@ if __name__ == "__main__":
         parser.add_argument("--data_file_path", type=str, default=DATA_FILE_PATH, help="The original traffic data path.")
         parser.add_argument("--history_seq_len", type=int, default=HISTORY_SEQ_LEN, help="sequence length.")
         parser.add_argument("--future_seq_len", type=int, default=FUTURE_SEQ_LEN, help="sequence length.")
-        parser.add_argument("--steps_per_day", type=int, default=STEPS_PER_DAY, help="Daily steps.")
-        parser.add_argument("--tod", type=bool, default=TOD, help="Adding a time feature.")
-        parser.add_argument("--dow", type=bool, default=DOW, help="Adding a week feature.")
         parser.add_argument("--target_channel", type=list, default=TARGET_CHANNEL, help="Selected channel.")
         parser.add_argument("--train_ratio", type=float, default=TRAIN_RATIO, help="Training ratio.")
         parser.add_argument("--valid_ratio", type=float, default=VALID_RATIO, help="Validation ratio.")
