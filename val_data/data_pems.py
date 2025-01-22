@@ -157,7 +157,7 @@ def generate_data(args: argparse.Namespace):
 
 if __name__ == "__main__":
     # The window size is used to generate historical and target sequences
-    data_list = ['CAir_PM']
+    data_list = ['PEMS08']
 
     for data in data_list:
         HISTORY_SEQ_LEN = 12
@@ -166,9 +166,8 @@ if __name__ == "__main__":
         TRAIN_RATIO = 0.6
         VALID_RATIO = 0.2
         TARGET_CHANNEL = [0]
-        # STEPS_PER_DAY = 288 # PEMS08 PEMS04 PEMS07M CAD3 CAD5
-        # STEPS_PER_DAY = 48 # CHI_TAXI bike_drop bike_pick taxi_drop taxi_pick CAir_AQI CAir_PM
-        STEPS_PER_DAY = 24 # CAir_AQI CAir_PM
+        STEPS_PER_DAY = 288 # PEMS08 PEMS07M CAD3
+        # STEPS_PER_DAY = 48 # CHI_TAXI bike_drop bike_pick taxi_drop taxi_pick
 
         DATASET_NAME = data
         TOD = True
