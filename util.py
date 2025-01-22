@@ -229,7 +229,7 @@ class InfoNCELoss(nn.Module):
     def forward(self, z_t, z_s):
         batch_size = z_t.size(0)
         z_t = F.normalize(z_t.reshape(batch_size, -1), dim=1)  # Flattening and normalizing
-        z_s = F.normalize(z_s.reshape(batch_size, -1), dim=1)  #
+        z_s = F.normalize(z_s.reshape(batch_size, -1), dim=1)  # Flattening and normalizing
         similarity_matrix = torch.matmul(z_s, z_t.T) / self.temperature
         labels = torch.arange(batch_size).long().to(z_t.device)
         loss = F.cross_entropy(similarity_matrix, labels)
