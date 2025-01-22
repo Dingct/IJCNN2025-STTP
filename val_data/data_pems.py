@@ -126,9 +126,12 @@ def generate_data(args: argparse.Namespace):
     # start_date = datetime(2017, 5, 1)  # PEMS07M
     # start_date = datetime(2020, 3, 1)  # CAD3
     # start_date = datetime(2021, 1, 1)  # CHI_TAXI
+
+    steps_per_day = 288 # PEMS08 PEMS07M CAD3
+    # steps_per_day = 48 # CHI_TAXI bike_drop bike_pick taxi_drop taxi_pick
     time_features = []
     for i in range(data_norm.shape[0]):
-        current_date = start_date + timedelta(minutes=i * 1440 / args.steps_per_day)  # The time corresponding to each time step is calculated according to the sampling frequency of 5 minutes
+        current_date = start_date + timedelta(minutes=i * 1440 / steps_per_day)  # The time corresponding to each time step is calculated according to the sampling frequency of 5 minutes
         month_feature = current_date.month / 12 - 0.5
         day_feature = current_date.day / 31 - 0.5
         weekday_feature = current_date.weekday() / 6 - 0.5
